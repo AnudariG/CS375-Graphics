@@ -5,11 +5,29 @@
 
 <script id="Cone-vertex-shader" type="x-shader/x-vertex">
     in vec4 aPosition;
+
+    float DegreesToRadians(float angle){
+        const float Pi = 3.14159265358979323846264338327;
+        return Pi * angle / 180.0;
+    }
     
     void main()
     {
+        float angle = -80.0; // degrees
+        float radians = DegreesToRadians(angle);
+        float cosine = cos(radians);
+        float sine = sin(radians);
+
+        mat4 xRotation = mat4(
+            vec4(1.0, 0.0, 0.0, 1.0),
+            vec4(0.0, cosine, sine, 0.0),
+            vec4(0.0, -sine, cosine, 0.0),
+            vec4(0.0, 0.0, 0.0, 1.0)
+        );
+
         gl_PointSize = 3.0;
-        gl_Position = aPosition;
+        gl_Position = 0.85 * xRotation * aPosition;  // rescale
+        gl_Position.w = 1.0;  // <-- this is a coordinate swizzle
     }
 </script>
 <script id="Cone-fragment-shader" type="x-shader/x-fragment">
